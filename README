@@ -1,0 +1,42 @@
+XtreamLua Player: What's that? How does it work?
+
+The XtreamLua Player (or XLP) is a PSP Lua Player coded by FlavR with the help of a lot of people. XtreamLua Player project was born because I found the LuaPlayer HM (which is a good Lua Player) too slow, and I don't use every functions of this Lua Player. So, I decided to create my own Lua Player, running faster than LPHM.
+
+In the same time, Geecko, my friend, released this first beta version of his graphic library: the gLib2D, I tried it, and found it wonderful. The gLib2D is now the graphic Library used in the XLP, in the latest version available at this time (beta 4).
+
+For the font Library, I chose intraFont, because I find it easy to use, and is quite light (compared with Freetype and TTF Fonts), Geecko (again) had released a mod of this Library called intraFont-G, which allows a text to be rotated. intrafont-G is used in the XLP, and text rotation too. You should know that printing a rotated text with LPHM was very hard, and without using the GU, your program would run very very slowly. With the XLP, the rotations (with text or images) goes very fast (more than 60 FPS) because they use the PSPGU.
+But that's not all for intraFont, my friend JiiCeii developed some functions that are included in the XLP, these functions allows you to print your text underlined, striked, backgrounded, shadowed, and more.
+
+To play audio files, I chose the PSPAalib because it allows me to play MP3, OGG, WAV and AT3 files. I can load 2 MP3 files, 2 AT3 files, 10 OGG files and 32 WAV files, and I can play 8 of them in the same time.
+
+XtreamLua Player can display Sony Dialog Messages (back, yes/no), the Sony OSK, and you can use Sony Savedatas system in your programs, each can be used in only one line in your Lua code (and this took me at least 40 lines in C for each function ^^).
+
+You can use timers easily. These timers can be started, stopped, paused and reset. You can get the elapsed time of a timer, the returned time will be in microseconds.
+
+You can also use time functions, time functions let you know the current time and date of your PSP, the current time in any time zone you want, to know to tick of your PSP. It allows you to know the number of days in the month you want, the current day in the week and to know if a year is leap or not.
+
+Some power functions are present in the Lua Player, you can know if unit is plugged in, if the battery is present, if the battery is charging, if the battery voltage is low, know the battery life in percent, the battery life time (in minutes), its temperature (in Celsius Degrees), to get the battery voltage.
+You can also set or get the CPU or the BUS frequencies, set the clock frequency, lock/unlock the power switch, generate a power tick to prevent the unit from powering off and turning off display, request the PSP to go into Standby and request the PSP to go into Suspend.
+
+I made some function to let you use the PSP files and directories, so you can rename a file, remove a file or an empty directory, create a new directory, get and set the current directory used when you load something, and list the content of a directory.
+
+Some USB functions are available, you can activate and deactivate the USB, and check if the USB is activated.
+
+You can of course check the status of your PSP buttons, if one pressed or not. You can print a debug text (a text that doesn't use intraFont) to debug your code if you have a problem, you can delay the PSP, also know the current FPS by calling a function, and choose to exit the game.
+
+That's all for the XtreamLua Player capacities (this is already much, no?). 
+
+Now, I'd like to thank some people:
+-	Geecko for his awesome gLib2D and the intraFont-G,
+-	Pyroesp that made the time and power functions,
+-	JiCé for the intraFont special printing functions and for the beta-testing,
+-	Dynodzzo for his great beta-testing,
+-	Léo for the Website,
+-	Walar for his help to make the Sony OSK run,
+-	Shaolan for Kuma: The Lua Documentation Generator I used to make the XLP Documentation,
+-	BenHur for his intraFont,
+-	Homemister91 for the LPHM source code, that helped me to understand how does a lua player is made, and for the LuaPlayer HM, that I used during 2 years.
+-	XtreamLua.com for its community, the best I've ever known.
+
+Thanks for reading,
+FlavR.
