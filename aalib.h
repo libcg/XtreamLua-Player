@@ -113,7 +113,7 @@ int Aalib_unload(lua_State *L);
 // XLP internal code //
 int Aalib_init(lua_State *L);
 
-static const luaL_reg Aalib_functions[] = { // Aalib methods
+static const luaL_Reg Aalib_functions[] = { // Aalib methods
 	{"load", Aalib_load},
 	{"unload", Aalib_unload},
 	{"play", Aalib_play},
