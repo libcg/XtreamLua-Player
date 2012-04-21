@@ -123,7 +123,7 @@ int sceIo_listDirectory(lua_State *L)
 
 int sceIo_init(lua_State *L)
 {
-	luaL_openlib(L, "sceIo", sceIo_methods, 0);
+	luaL_register(L, "sceIo", sceIo_methods);
 	
 	return 1;
 }

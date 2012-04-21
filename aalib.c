@@ -127,7 +127,7 @@ int Aalib_init(lua_State *L)
 	if (AalibInit() == 0)
 		return 0;
 	
-	luaL_openlib(L, "Aalib", Aalib_functions, 0);
+	luaL_register(L, "Aalib", Aalib_functions);
 	
 	lua_pushstring(L, "Aalib");
 	lua_gettable(L, LUA_GLOBALSINDEX);

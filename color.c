@@ -124,7 +124,7 @@ int Color_getColor(lua_State *L)
 
 int Color_init(lua_State *L)
 {
-	luaL_openlib(L, "Color", Color_methods, 0);
+	luaL_register(L, "Color", Color_methods);
 	
 	return 1;
 }

@@ -3,7 +3,7 @@
 #include <pspdebug.h>
 #include <psprtc.h>
 
-#include "timer.h"
+#include <libtimer.h>
 
 Timer *createTimer()
 {

@@ -126,7 +126,7 @@ int USB_init(lua_State *L)
 	usbActivate = 0;
 	usbModules = 0;
 	
-	luaL_openlib(L, "USB", USB_methods, 0);
+	luaL_register(L, "USB", USB_methods);
 	
 	return 1;
 }

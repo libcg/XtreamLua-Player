@@ -177,7 +177,7 @@ static const luaL_reg Savedata_methods[] = {
 
 void Savedata_init(lua_State *L)
 {
-	luaL_openlib(L, "Savedata", Savedata_methods, 0);	
+	luaL_register(L, "Savedata", Savedata_methods);	
 }
 
 

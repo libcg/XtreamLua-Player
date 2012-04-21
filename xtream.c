@@ -170,7 +170,7 @@ int Xtream_init(lua_State *L)
 		lua_n_fps = 0;
 		lua_fps = 60;
 	
-	luaL_openlib(L, "Xtream", XT_methods, 0);
+	luaL_register(L, "Xtream", XT_methods);
 	
 	return 1;
 }

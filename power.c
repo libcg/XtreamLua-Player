@@ -382,7 +382,7 @@ int Power_init(lua_State *L)
 	SetGlobalInt(POWER_TICK_SUSPEND)
 	SetGlobalInt(POWER_TICK_DISPLAY)
 	
-	luaL_openlib(L, "Power", Power_methods, 0);
+	luaL_register(L, "Power", Power_methods);
 	
 	return 1;
 }

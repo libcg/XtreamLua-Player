@@ -1,11 +1,12 @@
 TARGET = XLP
  
-OBJS = libs/aalib/pspaalib.o libs/aalib/pspaalibeffects.o libs/aalib/pspaalibscemp3.o libs/aalib/pspaalibwav.o libs/aalib/pspaalibat3.o libs/aalib/pspaalibogg.o \
-libs/glib2d.o libs/timer.o libs/libccc.o libs/intraFont.o libs/libtext.o \
-aalib.o color.o ctrl.o g2d.o intra.o power.o savedata.o sceIo.o time.o timer.o usb.o utility.o xtream.o main.o
- 
-INCDIR =
-CFLAGS = -O2 -G0 -Wall -DPSPFW3xx
+OBJS = lib/pspaalib.o lib/pspaalibeffects.o lib/pspaalibscemp3.o \
+       lib/pspaalibwav.o lib/pspaalibat3.o lib/pspaalibogg.o \
+       lib/glib2d.o lib/libtimer.o lib/libccc.o lib/intraFont.o lib/libtext.o \
+       aalib.o color.o ctrl.o g2d.o intra.o power.o savedata.o sceIo.o time.o \
+       timer.o usb.o utility.o xtream.o main.o
+
+CFLAGS = -O2 -G0 -Wall -DPSPFW3xx -I./include -L./lib
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 ASFLAGS = $(CFLAGS)
  
@@ -13,7 +14,7 @@ PSP_FW_VERSION = 600
 BUILD_PRX = 1
  
 LIBDIR =
-LIBS = -llua -llualib -lpng -ljpeg -lz -lpspgum -lm -lmikmod -lpsprtc -lpsppower \
+LIBS = -llua -lpng -ljpeg -lz -lpspgum -lm -lmikmod -lpsprtc -lpsppower \
         -lpspgu -lpspdebug -lpsputility \
         -lpspmp3 -lpspatrac3 -lvorbisidec -lpspaudio -lpspvram \
         -lpspusb -lpspusbstor

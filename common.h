@@ -10,10 +10,10 @@
 
 extern void luaC_collectgarbage (lua_State *L);
 
-#include "libs/glib2d.h"
-#include "libs/intraFont.h"
-#include "libs/timer.h"
-#include "libs/aalib/pspaalib.h"
+#include <glib2d.h>
+#include <intraFont.h>
+#include <libtimer.h>
+#include <pspaalib.h>
 
 /* Define */
 #ifndef RGBA
@@ -63,8 +63,8 @@ extern void luaC_collectgarbage (lua_State *L);
 	lua_pushvalue(L, -2);  /* push metatable */ \
 	lua_rawset(L, -3);  /* metatable.__index = metatable */ \
 	\
-	luaL_openlib(L, 0, METAMETHODS, 0); \
-	luaL_openlib(L, NAME, METHODS, 0); \
+	luaL_register(L, 0, METAMETHODS); \
+	luaL_register(L, NAME, METHODS); \
 	\
 	lua_pushstring(L, NAME); \
 	lua_gettable(L, LUA_GLOBALSINDEX); \

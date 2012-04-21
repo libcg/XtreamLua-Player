@@ -14,7 +14,7 @@
 #define __XLP_INTRA__
 
 #include "common.h"
-#include "libs/libtext.h"
+#include <libtext.h>
 
 
 /*

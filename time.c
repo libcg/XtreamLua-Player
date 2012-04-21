@@ -235,7 +235,7 @@ int Time_isLeapYear(lua_State *L)
 
 int Time_init(lua_State *L)
 {
-	luaL_openlib(L, "Time", Time_methods, 0);
+	luaL_register(L, "Time", Time_methods);
 	
 	return 1;
 }
