@@ -19,7 +19,7 @@ UserdataConvert(Ctrl, SceCtrlData, "Ctrl data") // Define Controls conversion
 	{ \
 		if (lua_gettop(L) != 1) return luaL_error(L, "Argument error, function must be called with no arguments and with a colon; e.g: pad:cross()."); \
 		SceCtrlData *pad = getCtrl(L, 1); \
-		lua_pushboolean(L, (pad->Buttons &enum) ? true : false); \
+		lua_pushboolean(L, pad->Buttons & enum); \
 		return 1; \
 	}
 
@@ -99,7 +99,7 @@ int Ctrl_equal(lua_State *L)
 	SceCtrlData *c = getCtrl(L, 1);
 	SceCtrlData *d = getCtrl(L, 2);
 	
-	lua_pushboolean(L, c->Buttons == d->Buttons ? true : false );
+	lua_pushboolean(L, c->Buttons == d->Buttons);
 	return 1;
 }
 

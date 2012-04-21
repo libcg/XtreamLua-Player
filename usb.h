@@ -57,8 +57,6 @@ int USB_isActivated(lua_State *L);
 // XLP internal code //
 int USB_init(lua_State *L);
 
-int usbState, usbActivate, usbModules;
-
 void cleanUSBDrivers();
 int loadUSB();
 int unloadUSB();

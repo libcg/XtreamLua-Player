@@ -25,7 +25,7 @@
 int Power_isPowerOnline(lua_State *L)
 {
 	
-	lua_pushboolean(L, scePowerIsPowerOnline() ? true : false);
+	lua_pushboolean(L, scePowerIsPowerOnline());
 
     return 1;
 }
@@ -41,7 +41,7 @@ int Power_isPowerOnline(lua_State *L)
 
 int Power_isBatteryExist(lua_State *L)
 {
-    lua_pushboolean(L, scePowerIsBatteryExist() ? true : false);
+    lua_pushboolean(L, scePowerIsBatteryExist());
 
     return 1;
 }
@@ -57,7 +57,7 @@ int Power_isBatteryExist(lua_State *L)
 
 int Power_isBatteryCharging(lua_State *L)
 {
-	lua_pushboolean(L, scePowerIsBatteryCharging() ? true : false);
+	lua_pushboolean(L, scePowerIsBatteryCharging());
 
     return 1;
 }
@@ -73,7 +73,7 @@ int Power_isBatteryCharging(lua_State *L)
 
 int Power_isLowBattery(lua_State *L)
 {
-	lua_pushboolean(L, scePowerIsLowBattery() ? true : false);
+	lua_pushboolean(L, scePowerIsLowBattery());
 
     return 1;
 }

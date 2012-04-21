@@ -68,7 +68,7 @@ float InversedText(int x, int y, intraFont *font, const char *text, float fontSi
 
 float AlphaDegrade(int x, int y, intraFont *font, const char *text, g2dColor colorText, g2dColor colorMark, float size, float angle, int center, dMode side)
 {
-    colorMark = RGBA(G2D_GET_R(colorMark), G2D_GET_G(colorMark), G2D_GET_B(colorMark), 180);
+    colorMark = G2D_RGBA(G2D_GET_R(colorMark), G2D_GET_G(colorMark), G2D_GET_B(colorMark), 180);
     int i, y_Mark = y, x_Mark = x;
 	
     for (i = 0; i < ALPHA_LONG_MARK; i++)    

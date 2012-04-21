@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <math.h>
+#include <stdbool.h>
 
 #include <lua.h>
 #include <lualib.h>
@@ -16,20 +17,16 @@ extern void luaC_collectgarbage (lua_State *L);
 #include <pspaalib.h>
 
 /* Define */
-#ifndef RGBA
-#define RGBA(r,g,b,a) (((a) << 24)|((b) << 16)|((g) << 8)|(r))
-#endif
 
-#define setInterval(value, minVal, maxVal) ((value < minVal) ? minVal : (value > maxVal) ? maxVal : value)
+#define setInterval(value, minVal, maxVal) \
+    ((value < minVal) ? minVal : (value > maxVal) ? maxVal : value)
 
-#define printf	pspDebugScreenPrintf
+#define printf pspDebugScreenPrintf
 
-#ifndef bool
-	#define bool char
-
-	#define true 1
-	#define false 0
-#endif
+#define Const(name, val) \
+	lua_pushstring(L, name); \
+	lua_pushnumber(L, val); \
+	lua_settable(L, -3) ;
 
 #define UserdataConvert(luaData, cData, luaType) \
 	cData *get##luaData(lua_State* L, int index) { \

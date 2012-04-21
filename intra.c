@@ -11,14 +11,7 @@
 
 #include "intra.h"
 
-#include <pspgu.h>
-
 UserdataConvert(intraFont, intraFont*, "Font")
-
-#define intraFont_Const(name, val)\
-	lua_pushstring(L, name);\
-	lua_pushnumber(L, val);\
-	lua_settable(L, -3);
 
 int intraFont_load(lua_State *L)
 {
@@ -272,18 +265,18 @@ int intraFont_init(lua_State *L)
 	lua_pushstring(L, "intraFont");
 	lua_gettable(L, LUA_GLOBALSINDEX);
 	
-	intraFont_Const("CENTER", INTRAFONT_ALIGN_CENTER)
-	intraFont_Const("LEFT", INTRAFONT_ALIGN_LEFT)
-	intraFont_Const("RIGHT", INTRAFONT_ALIGN_RIGHT)
+	Const("CENTER", INTRAFONT_ALIGN_CENTER)
+	Const("LEFT", INTRAFONT_ALIGN_LEFT)
+	Const("RIGHT", INTRAFONT_ALIGN_RIGHT)
 	
-	intraFont_Const("G_UP", GRAD_UP)
-	intraFont_Const("G_RIGHT", GRAD_RIGHT)
-	intraFont_Const("G_DOWN", GRAD_DOWN)
-	intraFont_Const("G_LEFT", GRAD_LEFT)
-	intraFont_Const("G_UP_LEFT", GRAD_UP_LEFT)
-	intraFont_Const("G_UP_RIGHT", GRAD_UP_RIGHT)
-	intraFont_Const("G_DOWN_LEFT", GRAD_DOWN_LEFT)
-	intraFont_Const("G_DOWN_RIGHT", GRAD_DOWN_RIGHT)
+	Const("G_UP", GRAD_UP)
+	Const("G_RIGHT", GRAD_RIGHT)
+	Const("G_DOWN", GRAD_DOWN)
+	Const("G_LEFT", GRAD_LEFT)
+	Const("G_UP_LEFT", GRAD_UP_LEFT)
+	Const("G_UP_RIGHT", GRAD_UP_RIGHT)
+	Const("G_DOWN_LEFT", GRAD_DOWN_LEFT)
+	Const("G_DOWN_RIGHT", GRAD_DOWN_RIGHT)
 	
 	return 1;
 }

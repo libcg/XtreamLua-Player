@@ -114,14 +114,6 @@ int Color_getColor(lua_State *L)
 	return 1;
 }
 
-/*int Color_tostring(lua_State *L)
-{
-	gColor color = getColor(L, 1);
-	lua_pushfstring(L, "Color: R=%d, G=%d, B=%d, A=%d", G_GET_R(color), G_GET_G(color), G_GET_B(color), G_GET_A(color));
-	
-	return 1;
-}*/
-
 int Color_init(lua_State *L)
 {
 	luaL_register(L, "Color", Color_methods);

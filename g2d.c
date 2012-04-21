@@ -13,11 +13,6 @@
 
 UserdataConvert(g2d, g2dImage*, "Image")
 
-#define g2d_Const(name, val)\
-	lua_pushstring(L, name);\
-	lua_pushnumber(L, val);\
-	lua_settable(L, -3);
-
 int g2D_clear(lua_State *L)
 {
 	if (lua_gettop(L) != 0 && lua_gettop(L) != 1) return luaL_error(L, "g2d.Clear([color]): takes 0 or 1 argument.");
@@ -509,7 +504,7 @@ int g2D_setTexRepeat(lua_State *L)
 {
 	if (lua_gettop(L) != 1) return luaL_error(L, "g2d.SetTexRepeat(use): takes one argument (boolean).");
 	
-	g2dSetTexRepeat(lua_toboolean(L, 1) ? true : false);
+	g2dSetTexRepeat(lua_toboolean(L, 1));
 	
 	return 0;
 }
@@ -518,7 +513,7 @@ int g2D_setTexBlend(lua_State *L)
 {
 	if (lua_gettop(L) != 1) return luaL_error(L, "g2d.SetTexBlend(use): takes one argument (boolean).");
 	
-	g2dSetTexBlend(lua_toboolean(L, 1) ? true : false);
+	g2dSetTexBlend(lua_toboolean(L, 1));
 	
 	return 0;
 }
@@ -527,7 +522,7 @@ int g2D_setTexLinear(lua_State *L)
 {
 	if (lua_gettop(L) != 1) return luaL_error(L, "g2d.SetTexLinear(use): takes one argument (boolean).");
 	
-	g2dSetTexLinear(lua_toboolean(L, 1) ? true : false);
+	g2dSetTexLinear(lua_toboolean(L, 1));
 	
 	return 0;
 }
@@ -673,15 +668,15 @@ int g2D_init(lua_State *L)
 	lua_pushstring(L, "g2d");
 	lua_gettable(L, LUA_GLOBALSINDEX);
 	
-	g2d_Const("SWIZZLE", G2D_SWIZZLE)
-	g2d_Const("VSYNC", G2D_VSYNC)
-	g2d_Const("STRIP", G2D_STRIP)
+	Const("SWIZZLE", G2D_SWIZZLE)
+	Const("VSYNC", G2D_VSYNC)
+	Const("STRIP", G2D_STRIP)
 	
-	g2d_Const("UP_LEFT", G2D_UP_LEFT)
-	g2d_Const("UP_RIGHT", G2D_UP_RIGHT)
-	g2d_Const("DOWN_LEFT", G2D_DOWN_LEFT)
-	g2d_Const("DOWN_RIGHT", G2D_DOWN_RIGHT)
-	g2d_Const("CENTER", G2D_CENTER)
+	Const("UP_LEFT", G2D_UP_LEFT)
+	Const("UP_RIGHT", G2D_UP_RIGHT)
+	Const("DOWN_LEFT", G2D_DOWN_LEFT)
+	Const("DOWN_RIGHT", G2D_DOWN_RIGHT)
+	Const("CENTER", G2D_CENTER)
 	
 	return 1;
 }

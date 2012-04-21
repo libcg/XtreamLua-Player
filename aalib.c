@@ -11,11 +11,6 @@
 
 #include "aalib.h"
 
-#define Aalib_Const(name, val)\
-	lua_pushstring(L, name);\
-	lua_pushnumber(L, val);\
-	lua_settable(L, -3);
-
 int Aalib_load(lua_State *L)
 {
 	int argc = lua_gettop(L);
@@ -31,7 +26,7 @@ int Aalib_load(lua_State *L)
 	
 	lua_gc(L, LUA_GCCOLLECT, 0);
 	
-	if (AalibLoad((char*)path, channel, argc == 3 ? (lua_toboolean(L, 3) ? true : false) : false) != 0) // If channel is a wav sound, load it in RAM, otherwise, don't load it in RAM
+	if (AalibLoad((char*)path, channel, argc == 3 ? (lua_toboolean(L, 3)) : false) != 0) // If channel is a wav sound, load it in RAM, otherwise, don't load it in RAM
 		return luaL_error(L, "Aalib.load: Error loading sound.");
 	
 	return 0;	
@@ -42,7 +37,7 @@ int Aalib_play(lua_State *L)
 	int argc = lua_gettop(L);
 	if (argc != 1 && argc != 2) return luaL_error(L, "Aalib.play(channel [,loop]): takes 1 or 2 arguments.");
 	
-	AalibSetAutoloop(luaL_checkint(L, 1), argc == 1 ? false : lua_toboolean(L, 2) ? true : false);
+	AalibSetAutoloop(luaL_checkint(L, 1), argc == 1 ? false : lua_toboolean(L, 2));
 	
 	if (AalibPlay(luaL_checkint(L, 1)) != 0)
 		return luaL_error(L, "Aalib.play: Error playing music.");
@@ -132,55 +127,55 @@ int Aalib_init(lua_State *L)
 	lua_pushstring(L, "Aalib");
 	lua_gettable(L, LUA_GLOBALSINDEX);
 	
-	Aalib_Const("MP3_1", PSPAALIB_CHANNEL_SCEMP3_1)
-	Aalib_Const("MP3_2", PSPAALIB_CHANNEL_SCEMP3_2)
+	Const("MP3_1", PSPAALIB_CHANNEL_SCEMP3_1)
+	Const("MP3_2", PSPAALIB_CHANNEL_SCEMP3_2)
 	
-	Aalib_Const("AT3_1", PSPAALIB_CHANNEL_AT3_1)
-	Aalib_Const("AT3_2", PSPAALIB_CHANNEL_AT3_2)
+	Const("AT3_1", PSPAALIB_CHANNEL_AT3_1)
+	Const("AT3_2", PSPAALIB_CHANNEL_AT3_2)
 	
-	Aalib_Const("OGG_1", PSPAALIB_CHANNEL_OGG_1)
-	Aalib_Const("OGG_2", PSPAALIB_CHANNEL_OGG_2)
-	Aalib_Const("OGG_3", PSPAALIB_CHANNEL_OGG_3)
-	Aalib_Const("OGG_4", PSPAALIB_CHANNEL_OGG_4)
-	Aalib_Const("OGG_5", PSPAALIB_CHANNEL_OGG_5)
-	Aalib_Const("OGG_6", PSPAALIB_CHANNEL_OGG_6)
-	Aalib_Const("OGG_7", PSPAALIB_CHANNEL_OGG_7)
-	Aalib_Const("OGG_8", PSPAALIB_CHANNEL_OGG_8)
-	Aalib_Const("OGG_9", PSPAALIB_CHANNEL_OGG_9)
-	Aalib_Const("OGG_10", PSPAALIB_CHANNEL_OGG_10)
+	Const("OGG_1", PSPAALIB_CHANNEL_OGG_1)
+	Const("OGG_2", PSPAALIB_CHANNEL_OGG_2)
+	Const("OGG_3", PSPAALIB_CHANNEL_OGG_3)
+	Const("OGG_4", PSPAALIB_CHANNEL_OGG_4)
+	Const("OGG_5", PSPAALIB_CHANNEL_OGG_5)
+	Const("OGG_6", PSPAALIB_CHANNEL_OGG_6)
+	Const("OGG_7", PSPAALIB_CHANNEL_OGG_7)
+	Const("OGG_8", PSPAALIB_CHANNEL_OGG_8)
+	Const("OGG_9", PSPAALIB_CHANNEL_OGG_9)
+	Const("OGG_10", PSPAALIB_CHANNEL_OGG_10)
 	
-	Aalib_Const("WAV_1", PSPAALIB_CHANNEL_WAV_1)
-	Aalib_Const("WAV_2", PSPAALIB_CHANNEL_WAV_2)
-	Aalib_Const("WAV_3", PSPAALIB_CHANNEL_WAV_3)
-	Aalib_Const("WAV_4", PSPAALIB_CHANNEL_WAV_4)
-	Aalib_Const("WAV_5", PSPAALIB_CHANNEL_WAV_5)
-	Aalib_Const("WAV_6", PSPAALIB_CHANNEL_WAV_6)
-	Aalib_Const("WAV_7", PSPAALIB_CHANNEL_WAV_7)
-	Aalib_Const("WAV_8", PSPAALIB_CHANNEL_WAV_8)
-	Aalib_Const("WAV_9", PSPAALIB_CHANNEL_WAV_9)
-	Aalib_Const("WAV_10", PSPAALIB_CHANNEL_WAV_10)
-	Aalib_Const("WAV_11", PSPAALIB_CHANNEL_WAV_11)
-	Aalib_Const("WAV_12", PSPAALIB_CHANNEL_WAV_12)
-	Aalib_Const("WAV_13", PSPAALIB_CHANNEL_WAV_13)
-	Aalib_Const("WAV_14", PSPAALIB_CHANNEL_WAV_14)
-	Aalib_Const("WAV_15", PSPAALIB_CHANNEL_WAV_15)
-	Aalib_Const("WAV_16", PSPAALIB_CHANNEL_WAV_16)
-	Aalib_Const("WAV_17", PSPAALIB_CHANNEL_WAV_17)
-	Aalib_Const("WAV_18", PSPAALIB_CHANNEL_WAV_18)
-	Aalib_Const("WAV_19", PSPAALIB_CHANNEL_WAV_19)
-	Aalib_Const("WAV_20", PSPAALIB_CHANNEL_WAV_20)
-	Aalib_Const("WAV_21", PSPAALIB_CHANNEL_WAV_21)
-	Aalib_Const("WAV_22", PSPAALIB_CHANNEL_WAV_22)
-	Aalib_Const("WAV_23", PSPAALIB_CHANNEL_WAV_23)
-	Aalib_Const("WAV_24", PSPAALIB_CHANNEL_WAV_24)
-	Aalib_Const("WAV_25", PSPAALIB_CHANNEL_WAV_25)
-	Aalib_Const("WAV_26", PSPAALIB_CHANNEL_WAV_26)
-	Aalib_Const("WAV_27", PSPAALIB_CHANNEL_WAV_27)
-	Aalib_Const("WAV_28", PSPAALIB_CHANNEL_WAV_28)
-	Aalib_Const("WAV_29", PSPAALIB_CHANNEL_WAV_29)
-	Aalib_Const("WAV_30", PSPAALIB_CHANNEL_WAV_30)
-	Aalib_Const("WAV_31", PSPAALIB_CHANNEL_WAV_31)
-	Aalib_Const("WAV_32", PSPAALIB_CHANNEL_WAV_32)
+	Const("WAV_1", PSPAALIB_CHANNEL_WAV_1)
+	Const("WAV_2", PSPAALIB_CHANNEL_WAV_2)
+	Const("WAV_3", PSPAALIB_CHANNEL_WAV_3)
+	Const("WAV_4", PSPAALIB_CHANNEL_WAV_4)
+	Const("WAV_5", PSPAALIB_CHANNEL_WAV_5)
+	Const("WAV_6", PSPAALIB_CHANNEL_WAV_6)
+	Const("WAV_7", PSPAALIB_CHANNEL_WAV_7)
+	Const("WAV_8", PSPAALIB_CHANNEL_WAV_8)
+	Const("WAV_9", PSPAALIB_CHANNEL_WAV_9)
+	Const("WAV_10", PSPAALIB_CHANNEL_WAV_10)
+	Const("WAV_11", PSPAALIB_CHANNEL_WAV_11)
+	Const("WAV_12", PSPAALIB_CHANNEL_WAV_12)
+	Const("WAV_13", PSPAALIB_CHANNEL_WAV_13)
+	Const("WAV_14", PSPAALIB_CHANNEL_WAV_14)
+	Const("WAV_15", PSPAALIB_CHANNEL_WAV_15)
+	Const("WAV_16", PSPAALIB_CHANNEL_WAV_16)
+	Const("WAV_17", PSPAALIB_CHANNEL_WAV_17)
+	Const("WAV_18", PSPAALIB_CHANNEL_WAV_18)
+	Const("WAV_19", PSPAALIB_CHANNEL_WAV_19)
+	Const("WAV_20", PSPAALIB_CHANNEL_WAV_20)
+	Const("WAV_21", PSPAALIB_CHANNEL_WAV_21)
+	Const("WAV_22", PSPAALIB_CHANNEL_WAV_22)
+	Const("WAV_23", PSPAALIB_CHANNEL_WAV_23)
+	Const("WAV_24", PSPAALIB_CHANNEL_WAV_24)
+	Const("WAV_25", PSPAALIB_CHANNEL_WAV_25)
+	Const("WAV_26", PSPAALIB_CHANNEL_WAV_26)
+	Const("WAV_27", PSPAALIB_CHANNEL_WAV_27)
+	Const("WAV_28", PSPAALIB_CHANNEL_WAV_28)
+	Const("WAV_29", PSPAALIB_CHANNEL_WAV_29)
+	Const("WAV_30", PSPAALIB_CHANNEL_WAV_30)
+	Const("WAV_31", PSPAALIB_CHANNEL_WAV_31)
+	Const("WAV_32", PSPAALIB_CHANNEL_WAV_32)
 	
 	return 1;
 }

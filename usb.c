@@ -9,8 +9,10 @@
  *	for more details.
  */
 
-
 #include "usb.h"
+
+bool usbActivate;
+int usbState, usbModules;
 
 /* Load module, code taken from pspsdk samples ;)*/
 int LoadStartModule(char *path)
@@ -92,7 +94,7 @@ int USB_activate(lua_State *L)
 	if (usbState)
 		return luaL_error(L, "Failed to activate USB.");
 	
-	usbActivate = 1;
+	usbActivate = true;
 	
 	return 1;
 }
@@ -108,22 +110,22 @@ int USB_deActivate(lua_State *L)
 	if (usbState)
 		return luaL_error(L, "Failed to deactivate USB.");
 	
-	usbActivate = 0;
+	usbActivate = false;
 	
 	return 1;
 }
 
 int USB_isActivated(lua_State *L)
 {
-	lua_pushboolean(L, usbActivate == 1 ? true : false);
+	lua_pushboolean(L, usbActivate);
 	
 	return 1;
 }
 
 int USB_init(lua_State *L)
 {
+	usbActivate = false;
 	usbState = 0;
-	usbActivate = 0;
 	usbModules = 0;
 	
 	luaL_register(L, "USB", USB_methods);

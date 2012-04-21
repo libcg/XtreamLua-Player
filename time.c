@@ -227,7 +227,7 @@ int Time_isLeapYear(lua_State *L)
 
     int year = luaL_checknumber(L, 1);
 
-	lua_pushboolean(L, sceRtcIsLeapYear(year) ? true : false);
+	lua_pushboolean(L, sceRtcIsLeapYear(year));
 
     return 1;
 }

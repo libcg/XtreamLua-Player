@@ -49,10 +49,7 @@
 #ifndef GLIB2D_H
 #define GLIB2D_H
 
-// Boolean
-#define false (0)
-#define true (!false)
-typedef char bool;
+#include <stdbool.h>
 
 /**
  * \def USE_PNG
