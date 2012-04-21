@@ -4,7 +4,7 @@
  *
  * gLib2D by Geecko - A simple, fast, light-weight 2D graphics library. \n\n
  * This library has been designed to replace the old graphics.c library
- * and to simplify the use of the pspgu.\n
+ * and to simplify the use of pspgu.\n
  * The goals : keep it simple, keep it small, keep it fast.
  *
  * \section limits Known limitations
@@ -34,20 +34,26 @@
  *
  * \section contact Contact
  *
- * Please report bugs or submit ideas at : \n geecko.dev@free.fr \n
- * Stay tuned on Twitter or Tumblr : \n
- * http://twitter.com/GeeckoDev \n http://geeckodev.tumblr.com
+ * Please report bugs or submit ideas at : \n geecko.dev@free.fr \n\n
+ * Get the full documentation on : \n http://geecko.dev.free.fr \n\n
+ * Also stay tuned on... \n
+ * https://github.com/GeeckoDev (contributors would be a plus!) \n
+ * http://twitter.com/GeeckoDev
  */
 
 
 /**
  * \file glib2d.h
  * \brief gLib2D Header
- * \version Beta 4
+ * \version Beta 5
  */
 
 #ifndef GLIB2D_H
 #define GLIB2D_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <stdbool.h>
 
@@ -58,7 +64,7 @@
  * Otherwise, this part will be not compiled to gain some space.
  * Enable this to get PNG support, disable to avoid compilation errors
  * when libpng is not linked in the Makefile.
- */ 
+ */
 /**
  * \def USE_JPEG
  * \brief Choose if the JPEG support is enabled.
@@ -66,24 +72,31 @@
  * Otherwise, this part will be not compiled to gain some space.
  * Enable this to get JPEG support, disable to avoid compilation errors
  * when libjpeg is not linked in the Makefile.
- */ 
- 
+ */
+/**
+ * \def USE_VFPU
+ * \brief Choose if the VFPU support is enabled.
+ *
+ * Otherwise, this part will be not compiled to use the standard math library.
+ * Enable this to greatly improve performance with 2d rotations. You SHOULD use
+ * PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU) to avoid crashes.
+ */
 #define USE_PNG
 #define USE_JPEG
+#define USE_VFPU
 
 /**
  * \def G2D_SCR_W
  * \brief Screen width constant, in pixels.
- */ 
+ */
 /**
  * \def G2D_SCR_H
  * \brief Screen height constant, in pixels.
- */ 
+ */
 /**
  * \def G2D_VOID
- * \brief Generic g2dEnum constant, equals to 0 (do nothing)
- */ 
- 
+ * \brief Generic constant, equals to 0 (do nothing).
+ */
 #define G2D_SCR_W (480)
 #define G2D_SCR_H (272)
 #define G2D_VOID 0
@@ -94,27 +107,25 @@
  *
  * This macro creates a g2dColor from 4 values, red, green, blue and alpha.
  * Input range is from 0 to 255.
- */ 
-#define G2D_RGBA(r,g,b,a) \
-((r)|((g)<<8)|((b)<<16)|((a)<<24))
+ */
+#define G2D_RGBA(r,g,b,a) ((r)|((g)<<8)|((b)<<16)|((a)<<24))
 
 /**
  * \def G2D_GET_R(color)
  * \brief Get red channel value from a g2dColor.
- */ 
+ */
 /**
  * \def G2D_GET_G(color)
  * \brief Get green channel value from a g2dColor.
- */ 
+ */
 /**
  * \def G2D_GET_B(color)
  * \brief Get blue channel value from a g2dColor.
- */ 
+ */
 /**
  * \def G2D_GET_A(color)
  * \brief Get alpha channel value from a g2dColor.
- */ 
-
+ */
 #define G2D_GET_R(color) (((color)    ) & 0xFF)
 #define G2D_GET_G(color) (((color)>>8 ) & 0xFF)
 #define G2D_GET_B(color) (((color)>>16) & 0xFF)
@@ -125,9 +136,8 @@
  * \brief g2dColor modulation.
  *
  * This macro modulates the luminance & alpha of a g2dColor.
- * Input range is from 0 to 255. 
- */ 
- 
+ * Input range is from 0 to 255.
+ */
 #define G2D_MODULATE(color,luminance,alpha) \
 G2D_RGBA((int)(luminance)*G2D_GET_R(color)/255, \
          (int)(luminance)*G2D_GET_G(color)/255, \
@@ -140,7 +150,6 @@ G2D_RGBA((int)(luminance)*G2D_GET_R(color)/255, \
  *
  * Primary, secondary, tertiary and grayscale colors are defined.
  */
-
 enum g2dColors
 {
   // Primary colors
@@ -162,46 +171,59 @@ enum g2dColors
   WHITE        = 0xFFFFFFFF,
   LITEGRAY     = 0xFFBFBFBF,
   GRAY         = 0xFF7F7F7F,
-  DARKGRAY     = 0xFF3F3F3F,  
+  DARKGRAY     = 0xFF3F3F3F,
   BLACK        = 0xFF000000
 };
 
 /**
  * \enum g2dCoord_Mode
- * \brief Coord modes enumeration.
+ * \brief Coordinates modes enumeration.
+ *
+ * Choose where the coordinates correspond in the object.
+ * Can only be used with g2dSetCoordMode.
+ */
+/**
  * \enum g2dLine_Mode
  * \brief Line modes enumeration.
+ *
+ * Change line draw properties.
+ * Can only be used with g2dBeginLines.
+ */
+/**
  * \enum g2dFlip_Mode
  * \brief Flip modes enumeration.
+ *
+ * Change flip properties.
+ * Can only be used with g2dFlip.
+ */
+/**
  * \enum g2dTex_Mode
  * \brief Texture modes enumeration.
  *
- * Choose where the coordinates correspond in the object.
- * This can be a corner or the center.
- */ 
- 
-enum g2dCoord_Mode
-{ 
-  G2D_UP_LEFT, G2D_UP_RIGHT, 
-  G2D_DOWN_RIGHT, G2D_DOWN_LEFT,
+ * Change texture properties.
+ * Can only be used with g2dTexLoad.
+ */
+typedef enum
+{
+  G2D_UP_LEFT,
+  G2D_UP_RIGHT,
+  G2D_DOWN_RIGHT,
+  G2D_DOWN_LEFT,
   G2D_CENTER
-};
-
-enum g2dLine_Mode
-{ 
+} g2dCoord_Mode;
+typedef enum
+{
   G2D_STRIP = 1 /**< Make a line strip. */
-};
-
-enum g2dFlip_Mode
+} g2dLine_Mode;
+typedef enum
 {
-  G2D_VSYNC = 1 /**< Limit the FPS to 60.
+  G2D_VSYNC = 1 /**< Limit the FPS to 60 (synchronized with the screen).
                      Better image quality and less power consumption. */
-};
-
-enum g2dTex_Mode
+} g2dFlip_Mode;
+typedef enum
 {
-  G2D_SWIZZLE = 1 /**< Recommended. Use it to get *more* speed. */
-};
+  G2D_SWIZZLE = 1 /**< Recommended. Use it to get *more* rendering speed. */
+} g2dTex_Mode;
 
 /**
  * \var g2dAlpha
@@ -211,30 +233,23 @@ enum g2dTex_Mode
  * \var g2dColor
  * \brief Color type.
  */
-/**
- * \var g2dEnum
- * \brief Enumeration type.
- */
-
 typedef int g2dAlpha;
 typedef unsigned int g2dColor;
-typedef int g2dEnum;
 
 /**
  * \struct g2dImage
  * \brief Image structure.
  */
-
 typedef struct
 {
   int tw;         /**< Real texture width. A power of two. */
   int th;         /**< Real texture height. A power of two. */
-  int w;          /**< Texture width, as seen when draw. */
-  int h;          /**< Texture height, as seen when draw. */
-  float ratio;    /**< Width/Height ratio. */
+  int w;          /**< Texture width, as seen when drawing. */
+  int h;          /**< Texture height, as seen when drawing. */
+  float ratio;    /**< Width/height ratio. */
   bool swizzled;  /**< Is the texture swizzled ? */
   bool can_blend; /**< Can the texture blend ? */
-  g2dColor* data;   /**< Pointer to the texture raw data. */
+  g2dColor* data; /**< Pointer to raw data. */
 } g2dImage;
 
 /**
@@ -245,40 +260,51 @@ typedef struct
  * \var g2d_disp_buffer
  * \brief The current display buffer as a texture.
  */
-
 extern g2dImage g2d_draw_buffer;
 extern g2dImage g2d_disp_buffer;
 
 /**
- * \brief Clears screen & depth buffer, starts rendering.
+ * \brief Initializes the library.
+ *
+ * This function will create a GU context and setup the display buffers.
+ * Automatically called by the other functions.
+ */
+void g2dInit();
+
+/**
+ * \brief Shutdowns the library.
+ *
+ * This function will destroy the GU context.
+ */
+void g2dTerm();
+
+/**
+ * \brief Clears screen & depth buffer.
  * @param color Screen clear color
  *
- * This function clears the screen, and calls g2dClearZ() if depth coordinate
- * is used in the loop. You MUST call this function at the beginning of the
- * loop to start the render process. Will automatically init the GU.
+ * This function clears the screen, and clears the zbuffer if depth coordinate
+ * is used in the loop. Will automatically init the GU if needed.
  */
- 
 void g2dClear(g2dColor color);
 
 /**
  * \brief Clears depth buffer.
  *
  * This function clears the zbuffer to zero (z range 0-65535).
+ * Will automatically init the GU if needed.
  */
- 
 void g2dClearZ();
 
 /**
  * \brief Begins rectangles rendering.
  * @param tex Pointer to a texture, pass NULL to get a colored rectangle.
  *
- * This function begins object rendering. Calls g2dReset().
+ * This function begins object rendering. Resets all properties.
  * One g2dAdd() call per object.
  * Only one texture can be used, but multiple objects can be rendered at a time.
  * g2dBegin*() / g2dEnd() couple can be called multiple times in the loop,
  * to render multiple textures.
  */
-
 void g2dBeginRects(g2dImage* tex);
 
 /**
@@ -287,30 +313,28 @@ void g2dBeginRects(g2dImage* tex);
  *
  * This function begins object rendering. Calls g2dReset().
  * Two g2dAdd() calls per object.
+ * Pass G2D_LINE_STRIP to make a line strip (two calls, then one per object).
  */
-
-void g2dBeginLines(g2dEnum line_mode);
+void g2dBeginLines(g2dLine_Mode mode);
 
 /**
  * \brief Begins quads rendering.
  * @param tex Pointer to a texture, pass NULL to get a colored quad.
  *
- * This function begins object rendering. Calls g2dReset().
- * Four g2dAdd() calls per object, first is for up left corner, then clockwise.
+ * This function begins object rendering. Resets all properties.
+ * Four g2dAdd() calls per object, first for the up left corner, then clockwise.
  * Only one texture can be used, but multiple objects can be rendered at a time.
  * g2dBegin*() / g2dEnd() couple can be called multiple times in the loop,
  * to render multiple textures.
  */
-
 void g2dBeginQuads(g2dImage* tex);
 
 /**
  * \brief Begins points rendering.
  *
- * This function begins object rendering. Calls g2dReset().
- * One g2dAdd() calls per object.
+ * This function begins object rendering. Resets all properties.
+ * One g2dAdd() call per object.
  */
-
 void g2dBeginPoints();
 
 /**
@@ -320,7 +344,6 @@ void g2dBeginPoints();
  * objects to the display list. Automatically adapts pspgu functionnalities
  * to get the best performance possible.
  */
-
 void g2dEnd();
 
 /**
@@ -328,9 +351,8 @@ void g2dEnd();
  *
  * This function must be called during object rendering.
  * Calls g2dResetCoord(), g2dResetRotation(), g2dResetScale(),
- * g2dResetColor(), g2dResetAlpha() and g2dResetCrop().
+ * g2dResetColor(), g2dResetAlpha(), g2dResetCrop() and g2dResetTex().
  */
-
 void g2dReset();
 
 /**
@@ -338,18 +360,16 @@ void g2dReset();
  * @param flip_mode A g2dFlip_Mode constant.
  *
  * This function must be called at the end of the loop.
- * Inverts screen buffers to display the whole thing.
+ * Renders the whole display list to the draw buffer.
+ * Inverts framebuffers to display the whole thing.
  */
-
-void g2dFlip(g2dEnum flip_mode);
+void g2dFlip(g2dFlip_Mode mode);
 
 /**
  * \brief Pushes the current transformation & attribution to a new object.
  *
  * This function must be called during object rendering.
- * This is a *basic* function.
  */
-
 void g2dAdd();
 
 /**
@@ -359,7 +379,6 @@ void g2dAdd();
  * The stack is 64 saves high.
  * Use it like the OpenGL one.
  */
- 
 void g2dPush();
 
 /**
@@ -369,18 +388,16 @@ void g2dPush();
  * The stack is 64 saves high.
  * Use it like the OpenGL one.
  */
-
 void g2dPop();
 
 /**
- * \brief Frees an image & set the pointer to NULL.
- * @param tex Pointer to the variable which contains the pointer.
+ * \brief Frees an image & set its pointer to NULL.
+ * @param tex Pointer to the variable which contains the image pointer.
  *
  * This function is used to gain memory when an image is useless.
  * Must pass the pointer to the variable which contains the pointer,
- * to set it to NULL. This is a more secure approach.
+ * to set it to NULL (passing NULL to a g2dBegin* function is safe).
  */
-
 void g2dTexFree(g2dImage** tex);
 
 /**
@@ -391,10 +408,10 @@ void g2dTexFree(g2dImage** tex);
  *
  * This function loads an image file. There is support for PNG & JPEG files
  * (if USE_PNG and USE_JPEG are defined). Swizzling is enabled only for 16*16+
- * textures (useless on small textures). Image support up to 512*512 only.
+ * textures (useless on small textures), pass G2D_SWIZZLE to enable it.
+ * Image support up to 512*512 only (hardware limitation).
  */
-
-g2dImage* g2dTexLoad(char path[], g2dEnum tex_mode);
+g2dImage* g2dTexLoad(char path[], g2dTex_Mode mode);
 
 /**
  * \brief Resets the current coordinates.
@@ -402,19 +419,16 @@ g2dImage* g2dTexLoad(char path[], g2dEnum tex_mode);
  * This function must be called during object rendering.
  * Sets g2dSetCoordMode() to G2D_UP_LEFT and g2dSetCoordXYZ() to (0,0,0).
  */
-
 void g2dResetCoord();
 
 /**
  * \brief Set coordinate mode.
- * @param mode A gCoord_Mode.
+ * @param coord_mode A gCoord_Mode.
  *
  * This function must be called during object rendering.
  * Defines where the coordinates correspond in the object.
- * Works even if the texture is inverted.
  */
-
-void g2dSetCoordMode(g2dEnum coord_mode);
+void g2dSetCoordMode(g2dCoord_Mode mode);
 
 /**
  * \brief Gets the current position.
@@ -426,7 +440,6 @@ void g2dSetCoordMode(g2dEnum coord_mode);
  * Parameters are pointers to float, not int !
  * Pass NULL if not needed.
  */
-
 void g2dGetCoordXYZ(float* x, float* y, float* z);
 
 /**
@@ -436,18 +449,16 @@ void g2dGetCoordXYZ(float* x, float* y, float* z);
  *
  * This function must be called during object rendering.
  */
-
 void g2dSetCoordXY(float x, float y);
 
 /**
  * \brief Sets the new position, with depth support.
  * @param x New x, in pixels.
  * @param y New y, in pixels.
- * @param z New z, in pixels. (0-65535)
+ * @param z New z, in pixels. (front 0-65535 back)
  *
  * This function must be called during object rendering.
  */
-
 void g2dSetCoordXYZ(float x, float y, float z);
 
 /**
@@ -457,7 +468,6 @@ void g2dSetCoordXYZ(float x, float y, float z);
  *
  * This function must be called during object rendering.
  */
-
 void g2dSetCoordXYRelative(float x, float y);
 
 /**
@@ -468,8 +478,16 @@ void g2dSetCoordXYRelative(float x, float y);
  *
  * This function must be called during object rendering.
  */
-
 void g2dSetCoordXYZRelative(float x, float y, float z);
+
+/**
+ * \brief Use integer coordinates.
+ * @param use false to desactivate (better look, by default),
+              true to activate (can be useful when you have glitches).
+ *
+ * This function must be called during object rendering.
+ */
+void g2dSetCoordInteger(bool use);
 
 /**
  * \brief Resets the global scale.
@@ -477,7 +495,6 @@ void g2dSetCoordXYZRelative(float x, float y, float z);
  * This function resets the global scale to 1.f.
  * Translations and scales are multiplied by this factor.
  */
-
 void g2dResetGlobalScale();
 
 /**
@@ -486,7 +503,6 @@ void g2dResetGlobalScale();
  * This function must be called during object rendering.
  * Sets the scale to the current image size or (10,10).
  */
-
 void g2dResetScale();
 
 /**
@@ -495,7 +511,6 @@ void g2dResetScale();
  *
  * Pass NULL if not needed.
  */
-
 void g2dGetGlobalScale(float* scale);
 
 /**
@@ -507,7 +522,6 @@ void g2dGetGlobalScale(float* scale);
  * Parameters are pointers to float, not int !
  * Pass NULL if not needed.
  */
-
 void g2dGetScaleWH(float* w, float* h);
 
 /**
@@ -515,7 +529,6 @@ void g2dGetScaleWH(float* w, float* h);
  *
  * Translations and scales are multiplied by this factor.
  */
-
 void g2dSetGlobalScale(float scale);
 
 /**
@@ -526,9 +539,8 @@ void g2dSetGlobalScale(float scale);
  * This function must be called during object rendering.
  * g2dResetScale() is called, then width & height scale are
  * multiplied by these values.
- * Note: negative values can be passed to invert the image.
+ * Negative values can be passed to invert the image.
  */
-
 void g2dSetScale(float w, float h);
 
 /**
@@ -537,9 +549,8 @@ void g2dSetScale(float w, float h);
  * @param h New height, in pixels.
  *
  * This function must be called during object rendering.
- * Note: negative values can be passed to invert the image.
+ * Negative values can be passed to invert the image.
  */
-
 void g2dSetScaleWH(float w, float h);
 
 /**
@@ -549,9 +560,8 @@ void g2dSetScaleWH(float w, float h);
  *
  * This function must be called during object rendering.
  * Current width & height scale are multiplied by these values.
- * Note: negative values can be passed to invert the image.
+ * Negative values can be passed to invert the image.
  */
-
 void g2dSetScaleRelative(float w, float h);
 
 /**
@@ -560,9 +570,8 @@ void g2dSetScaleRelative(float w, float h);
  * @param h New height to increment, in pixels.
  *
  * This function must be called during object rendering.
- * Note: negative values can be passed to invert the image.
+ * Negative values can be passed to invert the image.
  */
-
 void g2dSetScaleWHRelative(float w, float h);
 
 /**
@@ -571,7 +580,6 @@ void g2dSetScaleWHRelative(float w, float h);
  * This function must be called during object rendering.
  * Sets g2dSetColor() to WHITE.
  */
-
 void g2dResetColor();
 
 /**
@@ -580,7 +588,6 @@ void g2dResetColor();
  * This function must be called during object rendering.
  * Sets g2dSetAlpha() to 255.
  */
-
 void g2dResetAlpha();
 
 /**
@@ -590,7 +597,6 @@ void g2dResetAlpha();
  * This function must be called during object rendering.
  * Pass NULL if not needed.
  */
-
 void g2dGetAlpha(g2dAlpha* alpha);
 
 /**
@@ -598,10 +604,8 @@ void g2dGetAlpha(g2dAlpha* alpha);
  * @param color The new color.
  *
  * This function must be called during object rendering.
- * Can be used to colorize a non-textured objet.
- * Can also be used as a color mask for a texture.
+ * Can be used to colorize any object.
  */
-
 void g2dSetColor(g2dColor color);
 
 /**
@@ -609,9 +613,8 @@ void g2dSetColor(g2dColor color);
  * @param alpha The new alpha (0-255).
  *
  * This function must be called during object rendering.
- * Can be used for both textured and non-textured objects.
+ * Can be used to make any object transparent.
  */
-
 void g2dSetAlpha(g2dAlpha alpha);
 
 /**
@@ -619,9 +622,8 @@ void g2dSetAlpha(g2dAlpha alpha);
  * @param alpha The new alpha increment.
  *
  * This function must be called during object rendering.
- * Can be used for both textured and non-textured objects.
+ * Can be used to make any object transparent.
  */
-
 void g2dSetAlphaRelative(int alpha);
 
 /**
@@ -630,7 +632,6 @@ void g2dSetAlphaRelative(int alpha);
  * This function must be called during object rendering.
  * Sets g2dSetRotation() to 0°.
  */
-
 void g2dResetRotation();
 
 /**
@@ -640,7 +641,6 @@ void g2dResetRotation();
  * This function must be called during object rendering.
  * Pass NULL if not needed.
  */
-
 void g2dGetRotationRad(float* radians);
 
 /**
@@ -650,7 +650,6 @@ void g2dGetRotationRad(float* radians);
  * This function must be called during object rendering.
  * Pass NULL if not needed.
  */
-
 void g2dGetRotation(float* degrees);
 
 /**
@@ -660,7 +659,6 @@ void g2dGetRotation(float* degrees);
  * This function must be called during object rendering.
  * The rotation center is the actual coordinates.
  */
-
 void g2dSetRotationRad(float radians);
 
 /**
@@ -670,7 +668,6 @@ void g2dSetRotationRad(float radians);
  * This function must be called during object rendering.
  * The rotation center is the actual coordinates.
  */
-
 void g2dSetRotation(float degrees);
 
 /**
@@ -680,7 +677,6 @@ void g2dSetRotation(float degrees);
  * This function must be called during object rendering.
  * The rotation center is the actual coordinates.
  */
-
 void g2dSetRotationRadRelative(float radians);
 
 /**
@@ -690,16 +686,14 @@ void g2dSetRotationRadRelative(float radians);
  * This function must be called during object rendering.
  * The rotation center is the actual coordinates.
  */
-
 void g2dSetRotationRelative(float degrees);
 
 /**
  * \brief Resets the current crop.
  *
  * This function must be called during object rendering.
- * Sets g2dSetCropXY() to (0;0) and g2dSetCropWH() to (tex->w,tex->h) or (10,10).
+ * Sets g2dSetCropXY() to (0;0) and g2dSetCropWH() to (tex->w,tex->h).
  */
-
 void g2dResetCrop();
 
 /**
@@ -710,7 +704,6 @@ void g2dResetCrop();
  * This function must be called during object rendering.
  * Pass NULL if not needed.
  */
-
 void g2dGetCropXY(int* x, int* y);
 
 /**
@@ -721,7 +714,6 @@ void g2dGetCropXY(int* x, int* y);
  * This function must be called during object rendering.
  * Pass NULL if not needed.
  */
-
 void g2dGetCropWH(int* w, int* h);
 
 /**
@@ -729,12 +721,10 @@ void g2dGetCropWH(int* w, int* h);
  * @param x New x, in pixels.
  * @param y New y, in pixels.
  *
- * This function must be called during object rendering.
- * Defines the rectangle position of the crop.
- * If the rectangle is larger or next to the image, texture will be repeated.
- * Useful for a tileset.
+ * This function must be called during object rendering. Defines crop position.
+ * If the rectangle is larger or next to the image, texture will be repeated
+ * when g2dSetTexRepeat is enabled. Useful for a tileset.
  */
-
 void g2dSetCropXY(int x, int y);
 
 /**
@@ -742,12 +732,10 @@ void g2dSetCropXY(int x, int y);
  * @param w New width, in pixels.
  * @param h New height, in pixels.
  *
- * This function must be called during object rendering.
- * Defines the rectangle size of the crop.
- * If the rectangle is larger or next to the image, texture will be repeated.
- * Useful for a tileset.
+ * This function must be called during object rendering. Defines crop size.
+ * If the rectangle is larger or next to the image, texture will be repeated
+ * when g2dSetTexRepeat is enabled. Useful for a tileset.
  */
-
 void g2dSetCropWH(int w, int h);
 
 /**
@@ -755,12 +743,10 @@ void g2dSetCropWH(int w, int h);
  * @param x New x increment, in pixels.
  * @param y New y increment, in pixels.
  *
- * This function must be called during object rendering.
- * Defines the rectangle position of the crop.
- * If the rectangle is larger or next to the image, texture will be repeated.
- * Useful for a tileset.
+ * This function must be called during object rendering. Defines crop position.
+ * If the rectangle is larger or next to the image, texture will be repeated
+ * when g2dSetTexRepeat is enabled. Useful for a tileset.
  */
-
 void g2dSetCropXYRelative(int x, int y);
 
 /**
@@ -768,52 +754,45 @@ void g2dSetCropXYRelative(int x, int y);
  * @param w New width increment, in pixels.
  * @param h New height increment, in pixels.
  *
- * This function must be called during object rendering.
- * Defines the rectangle size of the crop.
- * If the rectangle is larger or next to the image, texture will be repeated.
- * Useful for a tileset.
+ * This function must be called during object rendering. Defines crop size.
+ * If the rectangle is larger or next to the image, texture will be repeated
+ * when g2dSetTexRepeat is enabled. Useful for a tileset.
  */
-
 void g2dSetCropWHRelative(int w, int h);
 
 /**
  * \brief Resets texture properties.
  *
- * This function can be called everywhere in the loop.
+ * This function must be called during object rendering.
  */
-
 void g2dResetTex();
 
 /**
  * \brief Set texture wrap.
- * @param use G2D_TRUE to repeat.
-              G2D_FALSE to clamp (by default).
+ * @param use true to repeat, false to clamp (by default).
  *
  * This function must be called during object rendering.
  */
-
 void g2dSetTexRepeat(bool use);
 
 /**
- * \brief Use the alpha blending with the texture.
- * @param use G2D_TRUE to activate (better look, by default).
-              G2D_FALSE to desactivate (better performance).
+ * \brief Use alpha blending with the texture.
+ * @param use true to activate (better look, by default),
+              false to desactivate (better performance).
  *
  * This function must be called during object rendering.
- * Automaticaly disabled when g2dImage::can_blend is set to G2D_FALSE.
+ * Automaticaly disabled when g2dImage::can_blend is set to false.
  */
-
 void g2dSetTexBlend(bool use);
 
 /**
  * \brief Use the bilinear filter with the texture.
- * @param use G2D_TRUE to activate (better look, by default).
-              G2D_FALSE to desactivate (better performance).
+ * @param use true to activate (better look, by default).
+              false to desactivate (better performance).
  *
  * This function must be called during object rendering.
  * Only useful when scaling.
  */
-
 void g2dSetTexLinear(bool use);
 
 /**
@@ -821,7 +800,6 @@ void g2dSetTexLinear(bool use);
  *
  * This function can be called everywhere in the loop.
  */
-
 void g2dResetScissor();
 
 /**
@@ -831,10 +809,13 @@ void g2dResetScissor();
  * @param w New width.
  * @param h New height.
  *
- * This function can be called everywhere *in* the loop.
+ * This function can be called everywhere in the loop.
  * Pixel draw will be skipped outside this rectangle.
  */
-
 void g2dSetScissor(int x, int y, int w, int h);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

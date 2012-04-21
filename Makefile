@@ -6,25 +6,18 @@ OBJS = lib/pspaalib.o lib/pspaalibeffects.o lib/pspaalibscemp3.o \
        aalib.o color.o ctrl.o g2d.o intra.o power.o savedata.o sceIo.o time.o \
        timer.o usb.o utility.o xtream.o main.o
 
-CFLAGS = -O2 -G0 -Wall -DPSPFW3xx -I./include -L./lib
-CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
-ASFLAGS = $(CFLAGS)
+CFLAGS = -O2 -G0 -Wall -I./include -L./lib
  
 PSP_FW_VERSION = 600
 BUILD_PRX = 1
- 
-LIBDIR =
-LIBS = -llua -lpng -ljpeg -lz -lpspgum -lm -lmikmod -lpsprtc -lpsppower \
-        -lpspgu -lpspdebug -lpsputility \
-        -lpspmp3 -lpspatrac3 -lvorbisidec -lpspaudio -lpspvram \
-        -lpspusb -lpspusbstor
+
+LIBS = -llua -lpng -ljpeg -lm -lmikmod -lz -lvorbisidec \
+       -lpspgum -lpspgu -lpspvram -lpspusb -lpspusbstor -lpsprtc -lpsppower \
+       -lpspdebug -lpsputility -lpspmp3 -lpspatrac3  -lpspaudio
  
 EXTRA_TARGETS = EBOOT.PBP
 PSP_EBOOT_TITLE = XLP - XtreamLua Player
-PSP_EBOOT_ICON = release/icon0.png
+PSP_EBOOT_ICON = res/icon0.png
  
 PSPSDK=$(shell psp-config --pspsdk-path)
 include $(PSPSDK)/lib/build.mak
-
-loadlib.S: loadlib/exports.exp
-	$(shell psp-config --pspdev-path)/bin/psp-build-exports --build-stubs $<

@@ -144,8 +144,9 @@ int main(int argc, char** argv)
 	}
 		
 	lua_close(L);
-	
+
 	intraFontShutdown();
+	g2dTerm();
 	cleanUSBDrivers();
 
 	sceKernelExitGame();

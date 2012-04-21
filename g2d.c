@@ -69,7 +69,7 @@ int g2D_beginLines(lua_State *L)
 {
 	if (lua_gettop(L) != 0 && lua_gettop(L) != 1) return luaL_error(L, "g2d.BeginLines([line_mode]): takes 0 or 1 argument.");
 	
-	g2dEnum strip = lua_gettop(L) == 0 ? G2D_VOID : luaL_checkint(L, 1) &G2D_STRIP ? G2D_STRIP : G2D_VOID;
+	int strip = (lua_gettop(L) == 0 ? G2D_VOID : (luaL_checkint(L, 1) & G2D_STRIP ? G2D_STRIP : G2D_VOID));
 	
 	g2dBeginLines(strip);
 	
@@ -103,7 +103,7 @@ int g2D_flip(lua_State *L)
 {
 	if (lua_gettop(L) != 0 && lua_gettop(L) != 1) return luaL_error(L, "g2d.Flip([vsync]): takes 0 or 1 argument.");
 	
-	g2dEnum vsync = (lua_gettop(L) == 1 ? G2D_VSYNC : G2D_VOID);
+	int vsync = (lua_gettop(L) == 1 ? G2D_VSYNC : G2D_VOID);
 	
 	g2dFlip(vsync);
 	
@@ -166,7 +166,7 @@ int g2D_setCoordMode(lua_State *L)
 {
 	if (lua_gettop(L) != 1) return luaL_error(L, "g2d.SetCoordMode(mode): takes one argument.");
 
-	g2dEnum mode = luaL_checkint(L, 1);
+	int mode = luaL_checkint(L, 1);
 	
 	if (mode < G2D_UP_LEFT || mode > G2D_CENTER) return luaL_error(L, "g2d.SetCoordMode(mode): mode must be either g2d.UP_LEFT, g2d.UP_RIGHT, g2d.DOWN_LEFT, g2d.DOWN_RIGHT or g2d.CENTER.");
 	
@@ -662,8 +662,9 @@ int g2D_tostring(lua_State *L)
 
 int g2D_init(lua_State *L)
 {	
+    g2dInit();
+
 	UserdataRegister("g2d", g2d_methods, g2d_metamethods)
-	
 	
 	lua_pushstring(L, "g2d");
 	lua_gettable(L, LUA_GLOBALSINDEX);
